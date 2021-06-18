@@ -10,10 +10,10 @@ NUM_FILES = 6
 END_OF_FILENAME = "_2020_NYLARC_Stmt"   
 
 class agentHandler:
-    def __init__(self,report,cover,stmt,id,name):
-        self.report = report
-        self.cover = cover
-        self.stmt = stmt
+    def __init__(self,reportPath,coverPath,stmtPath,id,name):
+        self.reportPath = reportPath
+        self.coverPath = coverPath
+        self.stmtPath = stmtPath
         self.id = id
         self.name = name
 
@@ -34,7 +34,6 @@ def nameGen(filename):
                 break
         numScores = numScores + 1
     final = final + END_OF_FILENAME
-    print(final)
     return final
 
 
@@ -46,21 +45,21 @@ def agentCreation(stringList,myPath):
     for filename in stringList:      
         path = "samples/" + filename
         pathList.append(path)
-    
+    pathList.sort()
     print(pathList)
     # Open the files and assign to agent object, add agent to agent list
     for pathName in pathList:
         if (counter%3==0):
-            print(counter)
             print("[+]Creating an agent...")
             parameter = pathList[counter][8:]
             finalName = nameGen(parameter)
-            report = open(pathList[counter], 'rb')
+            cover = pathList[counter]
             i1 = counter+1
             i2 = counter+2
-            cover = open(pathList[i1], 'rb')
-            stmt = open(pathList[i2],'rb')
-            newAgent = agentHandler(cover,report,stmt,pathList[counter][7:13],finalName)
+            report = pathList[i1]
+            stmt = pathList[i2]
+            newAgent = agentHandler(cover,report,stmt,pathList[counter][8:14],finalName)
+            print(newAgent.id)
             agentList.append(newAgent)
             counter = counter + 1
         else:
@@ -69,9 +68,14 @@ def agentCreation(stringList,myPath):
 
 def appender(agent):
     # Read the files that you have opened
-    pdf1Reader = PyPDF2.PdfFileReader(agent.cover)
-    pdf2Reader = PyPDF2.PdfFileReader(agent.stmt)
-    pdf3Reader = PyPDF2.PdfFileReader(agent.report)
+    cover = open(agent.coverPath,'rb')
+    stmt = open(agent.stmtPath,'rb')
+    report = open(agent.reportPath,'rb')
+    print(cover)
+
+    pdf1Reader = PyPDF2.PdfFileReader(cover)
+    pdf2Reader = PyPDF2.PdfFileReader(stmt)
+    pdf3Reader = PyPDF2.PdfFileReader(report)
 
     # Create a new PdfFileWriter object which represents a blank PDF document
     pdfWriter = PyPDF2.PdfFileWriter()
@@ -89,12 +93,11 @@ def appender(agent):
     # Now that you have copied all the pages in both the documents, write them into the a new document
     pdfOutputFile = open('MergedFiles.pdf', 'wb')
     pdfWriter.write(pdfOutputFile)    
-    
-    print("List Loaded...")
 
 def generateReports(agentList):
-    for agent in agentList:
-        appender(agent)
+    appender(agentList[0])
+    #for agent in agentList:
+   #     appender(agent)
 
 def listLoad(myPath):
     theList = []
@@ -127,7 +130,7 @@ def main():
         print(agent.name)
 
     print("[/]Creating each agent's final report...")
-    #finalList = generateReports(agentList)
+    finalList = generateReports(agentList)
 
 
 
