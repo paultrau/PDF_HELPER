@@ -42,25 +42,29 @@ def nameGen(filename):
 def agentCreation(stringList,myPath):
     pathList = []
     agentList = []
+    counter = 0
     for filename in stringList:      
         path = "samples/" + filename
         pathList.append(path)
-        print(path)   
+    
+    print(pathList)
     # Open the files and assign to agent object, add agent to agent list
-    for i in range(0,NUM_FILES+1,3):
-        print("Creating an agent...")
-        parameter = pathList[i][8:]
-        print(parameter)
-        finalName = nameGen(parameter)
-        print(finalName)
-        report = open(pathList[i], 'rb')
-        i2 = i+2
-        print(report)
-        cover = open(pathList[i+1], 'rb')
-        stmt = open(pathList[i2],'rb')
-        newAgent = agentHandler(cover,report,stmt,pathList[i][7:13],finalName)
-        print(newAgent)
-        agentList.append(newAgent)
+    for pathName in pathList:
+        if (counter%3==0):
+            print(counter)
+            print("[+]Creating an agent...")
+            parameter = pathList[counter][8:]
+            finalName = nameGen(parameter)
+            report = open(pathList[counter], 'rb')
+            i1 = counter+1
+            i2 = counter+2
+            cover = open(pathList[i1], 'rb')
+            stmt = open(pathList[i2],'rb')
+            newAgent = agentHandler(cover,report,stmt,pathList[counter][7:13],finalName)
+            agentList.append(newAgent)
+            counter = counter + 1
+        else:
+            counter = counter + 1
     return agentList
 
 def appender(agent):
@@ -71,7 +75,6 @@ def appender(agent):
 
     # Create a new PdfFileWriter object which represents a blank PDF document
     pdfWriter = PyPDF2.PdfFileWriter()
-
     # Loop through all the pagenumbers for the three documents
     for pageNum in range(pdf1Reader.numPages):
         pageObj = pdf1Reader.getPage(pageNum)
@@ -113,7 +116,6 @@ def main():
     
     print("[\]Loading list of filenames...")  
     fnList = listLoad(userInput)
-    print(fnList)
     print("[+]...Filename List Loaded!")
     
     print("[/]Creating Agent Objects...")
