@@ -28,6 +28,7 @@ class agentHandler:
 
 #generates the final name for the reports using the END_OF_FILENAME constant
 def nameGen(filename):
+    print(filename)
     check = filename[0]
     final = ""
     counter = 0
@@ -76,8 +77,6 @@ def agentCreation(stringList,fileList,myPath):
             break
 
         currentID = pathList[counter][8:15]
-        parameter = pathList[counter][8:]
-        finalName = nameGen(parameter)
 
         print("[+]Assigning Cover...")
         print(counter)
@@ -90,7 +89,10 @@ def agentCreation(stringList,fileList,myPath):
         report = fileList[counter]
         tempList.append(pathList[counter])
         counter = counter + 1
-       
+        
+        parameter = pathList[counter][8:]
+        finalName = nameGen(parameter)
+        
         print("[+]Assigning Statment...")
         print(counter)
         stmt = fileList[counter]
@@ -219,8 +221,8 @@ def main():
     print("[+]...Confirmed")
     
     #un-comment the following to take in user input for constants
-    #NUM_FILES = int(input("[!]Enter number of files: "))
-    #print("[+]...Confirmed")
+    NUM_FILES = int(input("[!]Enter number of files: "))
+    print("[+]...Confirmed")
     #END_OF_FILENAME = input("[!]Enter final filename suffix: ")
     #print("[+]...Confirmed")
     
